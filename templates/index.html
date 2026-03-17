@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Simple Sender</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.4);
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: .25rem;
+            color: #f8fafc;
+        }
+        .subtitle {
+            color: #94a3b8;
+            font-size: .875rem;
+            margin-bottom: 1.75rem;
+        }
+        .flash {
+            padding: .75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: .875rem;
+        }
+        .flash.success { background: #065f46; color: #a7f3d0; }
+        .flash.error   { background: #7f1d1d; color: #fca5a5; }
+        fieldset {
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem 1rem .5rem;
+            margin-bottom: 1.25rem;
+        }
+        legend {
+            font-size: .8rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #94a3b8;
+            padding: 0 .5rem;
+        }
+        label {
+            display: block;
+            font-size: .8rem;
+            color: #94a3b8;
+            margin-bottom: .25rem;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"] {
+            width: 100%;
+            padding: .55rem .75rem;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: .9rem;
+            margin-bottom: .75rem;
+            transition: border-color .2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .row {
+            display: flex;
+            gap: .75rem;
+        }
+        .row > div { flex: 1; }
+        .row > div.small { flex: 0 0 100px; }
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: .75rem;
+        }
+        .checkbox-row input { margin: 0; }
+        .checkbox-row label { margin: 0; color: #e2e8f0; }
+        .file-input {
+            position: relative;
+            border: 2px dashed #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 1.25rem;
+            transition: border-color .2s;
+        }
+        .file-input:hover { border-color: #3b82f6; }
+        .file-input input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-input .label {
+            color: #94a3b8;
+            font-size: .875rem;
+        }
+        .file-input .label strong { color: #3b82f6; }
+        .file-name {
+            margin-top: .5rem;
+            font-size: .8rem;
+            color: #3b82f6;
+        }
+        button {
+            width: 100%;
+            padding: .75rem;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Simple Sender</h1>
+        <p class="subtitle">Envie e-mails HTML para teste de forma rápida.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <fieldset>
+                <legend>Servidor SMTP</legend>
+                <div class="row">
+                    <div>
+                        <label for="smtp_host">Host *</label>
+                        <input type="text" id="smtp_host" name="smtp_host" placeholder="smtp.gmail.com" required>
+                    </div>
+                    <div class="small">
+                        <label for="smtp_port">Porta</label>
+                        <input type="number" id="smtp_port" name="smtp_port" value="587">
+                    </div>
+                </div>
+                <label for="smtp_user">Usuário</label>
+                <input type="text" id="smtp_user" name="smtp_user" placeholder="seu@email.com">
+                <label for="smtp_pass">Senha</label>
+                <input type="password" id="smtp_pass" name="smtp_pass" placeholder="senha ou app password">
+                <div class="checkbox-row">
+                    <input type="checkbox" id="use_tls" name="use_tls" checked>
+                    <label for="use_tls">Usar TLS</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>E-mail</legend>
+                <label for="from_email">Remetente *</label>
+                <input type="email" id="from_email" name="from_email" placeholder="remetente@email.com" required>
+                <label for="to_email">Destinatário *</label>
+                <input type="email" id="to_email" name="to_email" placeholder="destinatario@email.com" required>
+                <label for="subject">Assunto</label>
+                <input type="text" id="subject" name="subject" placeholder="Teste de e-mail HTML" value="Teste de e-mail HTML">
+            </fieldset>
+
+            <div class="file-input" id="dropzone">
+                <input type="file" name="zip_file" accept=".zip" required id="zip_input">
+                <div class="label"><strong>Clique</strong> ou arraste o arquivo .zip aqui</div>
+                <div class="file-name" id="file-name"></div>
+            </div>
+
+            <button type="submit">Enviar E-mail</button>
+        </form>
+    </div>
+
+    <script>
+        const input = document.getElementById('zip_input');
+        const nameEl = document.getElementById('file-name');
+        input.addEventListener('change', () => {
+            nameEl.textContent = input.files[0] ? input.files[0].name : '';
+        });
+    </script>
+</body>
+</html>
