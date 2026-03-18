@@ -6,13 +6,11 @@ import zipfile
 import logging
 import mimetypes
 import smtplib
-import secrets
-from functools import wraps
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.header import Header
-from flask import Flask, request, render_template, flash, redirect, url_for, session
+from flask import Flask, request, render_template, flash, redirect, url_for
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -41,7 +39,6 @@ if not _secret_key:
 app.secret_key = _secret_key
 
 UPLOAD_DIR = os.environ.get("UPLOAD_DIR", "/tmp/email_sender_uploads")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
 # Limites de upload
 MAX_ZIP_UPLOAD_BYTES = 5 * 1024 * 1024    # 5 MB comprimido
@@ -73,44 +70,6 @@ def _is_valid_zip(file_storage) -> bool:
     header = file_storage.read(4)
     file_storage.seek(0)
     return header == ZIP_MAGIC
-
-
-# ---------------------------------------------------------------------------
-# Autenticação
-# ---------------------------------------------------------------------------
-def login_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not session.get("authenticated"):
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-    return decorated
-
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if not ADMIN_PASSWORD:
-        # Sem senha configurada: acesso livre (dev local sem restrição)
-        session["authenticated"] = True
-        return redirect(url_for("index"))
-
-    if request.method == "POST":
-        senha = request.form.get("password", "")
-        if secrets.compare_digest(senha, ADMIN_PASSWORD):
-            session["authenticated"] = True
-            session.permanent = True
-            logger.info("login_success ip=%s", request.remote_addr)
-            return redirect(url_for("index"))
-        logger.warning("login_failed ip=%s", request.remote_addr)
-        flash("Senha incorreta.", "error")
-
-    return render_template("login.html")
-
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("login"))
 
 
 # ---------------------------------------------------------------------------
@@ -235,7 +194,6 @@ def send_email(smtp_host, smtp_port, smtp_user, smtp_pass, use_tls,
 # Rotas
 # ---------------------------------------------------------------------------
 @app.route("/", methods=["GET", "POST"])
-@login_required
 def index():
     if request.method == "POST":
         smtp_host = request.form.get("smtp_host", "").strip()
