@@ -1,5 +1,8 @@
 import os
 import re
+from dotenv import load_dotenv
+
+load_dotenv()
 import uuid
 import shutil
 import zipfile
@@ -13,9 +16,9 @@ from email import encoders
 from flask import Flask, request, render_template, flash, redirect, url_for
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24))
 
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+UPLOAD_DIR = os.environ.get("UPLOAD_DIR", "/tmp/email_sender_uploads")
 
 
 def extract_zip(zip_path, extract_to):
