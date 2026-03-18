@@ -151,7 +151,7 @@ def index():
                 return redirect(url_for("index"))
 
             html_dir = os.path.dirname(html_file)
-            with open(html_file, "r", encoding="utf-8") as f:
+            with open(html_file, "r", encoding="utf-8-sig") as f:
                 html_content = f.read()
 
             html_content, image_parts = inline_images(html_content, html_dir)
