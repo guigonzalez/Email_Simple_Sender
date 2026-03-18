@@ -120,7 +120,7 @@ def index():
         smtp_host = request.form.get("smtp_host", "").strip()
         smtp_port = int(request.form.get("smtp_port", 587))
         smtp_user = request.form.get("smtp_user", "").strip()
-        smtp_pass = request.form.get("smtp_pass", "").strip()
+        smtp_pass = request.form.get("smtp_pass", "").strip().replace("\xa0", "")
         use_tls = request.form.get("use_tls") == "on"
         from_email = request.form.get("from_email", "").strip().replace("\xa0", " ")
         to_email = request.form.get("to_email", "").strip().replace("\xa0", " ")
