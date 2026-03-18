@@ -9,6 +9,7 @@ import zipfile
 import mimetypes
 import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.header import Header
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
@@ -90,7 +91,7 @@ def send_email(smtp_host, smtp_port, smtp_user, smtp_pass, use_tls,
     msg = MIMEMultipart("related")
     msg["From"] = from_email
     msg["To"] = to_email
-    msg["Subject"] = subject
+    msg["Subject"] = Header(subject, "utf-8")
 
     html_part = MIMEText(html_content, "html", "utf-8")
     msg.attach(html_part)
