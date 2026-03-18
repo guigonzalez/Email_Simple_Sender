@@ -170,6 +170,7 @@
                     <option value="outlook">Outlook / Hotmail</option>
                     <option value="yahoo">Yahoo Mail</option>
                     <option value="mailhog">Mailhog (local)</option>
+                    <option value="mailtrap">Mailtrap</option>
                 </select>
                 <div class="row">
                     <div>
@@ -222,7 +223,8 @@
             gmail:   { host: 'smtp.gmail.com',        port: 587,  tls: true  },
             outlook: { host: 'smtp.office365.com',    port: 587,  tls: true  },
             yahoo:   { host: 'smtp.mail.yahoo.com',   port: 587,  tls: true  },
-            mailhog: { host: 'localhost',              port: 1025, tls: false },
+            mailhog:  { host: 'localhost',              port: 1025, tls: false },
+            mailtrap: { host: 'sandbox.smtp.mailtrap.io', port: 587, tls: true  },
         };
 
         document.getElementById('smtp_profile').addEventListener('change', function () {
