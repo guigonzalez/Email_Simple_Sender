@@ -1,5 +1,6 @@
 import os
 import re
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -163,6 +164,7 @@ def index():
 
             flash("E-mail enviado com sucesso!", "success")
         except Exception as e:
+            print(traceback.format_exc())
             flash(f"Erro ao enviar: {e}", "error")
         finally:
             shutil.rmtree(job_dir, ignore_errors=True)
