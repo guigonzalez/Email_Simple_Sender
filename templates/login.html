@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Email Simple Sender</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.4);
+        }
+        h1 { font-size: 1.5rem; margin-bottom: .25rem; color: #f8fafc; }
+        .subtitle { color: #94a3b8; font-size: .875rem; margin-bottom: 1.75rem; }
+        .flash {
+            padding: .75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: .875rem;
+        }
+        .flash.error { background: #7f1d1d; color: #fca5a5; }
+        label {
+            display: block;
+            font-size: .8rem;
+            color: #94a3b8;
+            margin-bottom: .25rem;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: .55rem .75rem;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: .9rem;
+            margin-bottom: 1.25rem;
+            transition: border-color .2s;
+        }
+        input:focus { outline: none; border-color: #3b82f6; }
+        button {
+            width: 100%;
+            padding: .75rem;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Simple Sender</h1>
+        <p class="subtitle">Acesso restrito.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" autofocus required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+</body>
+</html>
