@@ -11,6 +11,7 @@ from functools import wraps
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
+from email.header import Header
 from flask import Flask, request, render_template, flash, redirect, url_for, session
 from dotenv import load_dotenv
 
@@ -214,7 +215,7 @@ def send_email(smtp_host, smtp_port, smtp_user, smtp_pass, use_tls,
     msg = MIMEMultipart("related")
     msg["From"] = from_email
     msg["To"] = to_email
-    msg["Subject"] = subject
+    msg["Subject"] = Header(subject, "utf-8")
 
     msg.attach(MIMEText(html_content, "html", "utf-8"))
     for img in image_parts:
