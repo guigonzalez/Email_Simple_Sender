@@ -133,6 +133,19 @@
             transition: background .2s;
         }
         button:hover { background: #2563eb; }
+        select {
+            width: 100%;
+            padding: .55rem .75rem;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: .9rem;
+            margin-bottom: .75rem;
+            cursor: pointer;
+            transition: border-color .2s;
+        }
+        select:focus { outline: none; border-color: #3b82f6; }
     </style>
 </head>
 <body>
@@ -150,6 +163,14 @@
 
             <fieldset>
                 <legend>Servidor SMTP</legend>
+                <label for="smtp_profile">Perfil</label>
+                <select id="smtp_profile">
+                    <option value="">— Configuração manual —</option>
+                    <option value="gmail">Gmail</option>
+                    <option value="outlook">Outlook / Hotmail</option>
+                    <option value="yahoo">Yahoo Mail</option>
+                    <option value="mailhog">Mailhog (local)</option>
+                </select>
                 <div class="row">
                     <div>
                         <label for="smtp_host">Host *</label>
@@ -195,6 +216,21 @@
         const nameEl = document.getElementById('file-name');
         input.addEventListener('change', () => {
             nameEl.textContent = input.files[0] ? input.files[0].name : '';
+        });
+
+        const profiles = {
+            gmail:   { host: 'smtp.gmail.com',        port: 587,  tls: true  },
+            outlook: { host: 'smtp.office365.com',    port: 587,  tls: true  },
+            yahoo:   { host: 'smtp.mail.yahoo.com',   port: 587,  tls: true  },
+            mailhog: { host: 'localhost',              port: 1025, tls: false },
+        };
+
+        document.getElementById('smtp_profile').addEventListener('change', function () {
+            const p = profiles[this.value];
+            if (!p) return;
+            document.getElementById('smtp_host').value = p.host;
+            document.getElementById('smtp_port').value = p.port;
+            document.getElementById('use_tls').checked  = p.tls;
         });
     </script>
 </body>
