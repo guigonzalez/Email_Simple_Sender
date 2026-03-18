@@ -108,7 +108,7 @@ def send_email(smtp_host, smtp_port, smtp_user, smtp_pass, use_tls,
     if smtp_user and smtp_pass:
         server.login(smtp_user, smtp_pass)
 
-    server.sendmail(from_email, to_email, msg.as_string())
+    server.send_message(msg)
     server.quit()
 
 
