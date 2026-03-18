@@ -121,9 +121,9 @@ def index():
         smtp_user = request.form.get("smtp_user", "").strip()
         smtp_pass = request.form.get("smtp_pass", "").strip()
         use_tls = request.form.get("use_tls") == "on"
-        from_email = request.form.get("from_email", "").strip()
-        to_email = request.form.get("to_email", "").strip()
-        subject = request.form.get("subject", "").strip()
+        from_email = request.form.get("from_email", "").strip().replace("\xa0", " ")
+        to_email = request.form.get("to_email", "").strip().replace("\xa0", " ")
+        subject = request.form.get("subject", "").strip().replace("\xa0", " ")
 
         if not smtp_host or not from_email or not to_email:
             flash("Preencha todos os campos obrigatórios.", "error")
