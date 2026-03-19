@@ -10,300 +10,434 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0f172a;
             color: #e2e8f0;
-            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Top bar ── */
+        .topbar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: .75rem 1.25rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            gap: .75rem;
+            flex-shrink: 0;
         }
-        .container {
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 520px;
-            box-shadow: 0 4px 24px rgba(0,0,0,.4);
-        }
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: .25rem;
-            color: #f8fafc;
-        }
-        .subtitle {
-            color: #94a3b8;
-            font-size: .875rem;
-            margin-bottom: 1.75rem;
-        }
+        .topbar h1 { font-size: 1rem; color: #f8fafc; }
+        .topbar .subtitle { color: #64748b; font-size: .78rem; }
+
+        /* ── Flash ── */
+        .flash-area { flex-shrink: 0; }
         .flash {
-            padding: .75rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: .875rem;
+            padding: .5rem 1.25rem;
+            font-size: .82rem;
         }
         .flash.success { background: #065f46; color: #a7f3d0; }
         .flash.error   { background: #7f1d1d; color: #fca5a5; }
-        fieldset {
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 1rem 1rem .5rem;
-            margin-bottom: 1.25rem;
+
+        /* ── 3-column layout ── */
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
         }
-        legend {
-            font-size: .8rem;
+
+        /* ── Left: Form ── */
+        .col-form {
+            width: 280px;
+            flex-shrink: 0;
+            background: #1e293b;
+            border-right: 1px solid #334155;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .field { display: flex; flex-direction: column; gap: .4rem; }
+        .field label {
+            font-size: .7rem;
             text-transform: uppercase;
             letter-spacing: .05em;
-            color: #94a3b8;
-            padding: 0 .5rem;
+            color: #64748b;
         }
-        label {
-            display: block;
-            font-size: .8rem;
-            color: #94a3b8;
-            margin-bottom: .25rem;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="number"] {
-            width: 100%;
-            padding: .55rem .75rem;
+        .field input,
+        .field select {
+            padding: .45rem .65rem;
             border: 1px solid #334155;
             border-radius: 6px;
             background: #0f172a;
             color: #e2e8f0;
-            font-size: .9rem;
-            margin-bottom: .75rem;
-            transition: border-color .2s;
+            font-size: .85rem;
+            width: 100%;
+            transition: border-color .15s;
         }
-        input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-        .row {
-            display: flex;
-            gap: .75rem;
-        }
-        .row > div { flex: 1; }
-        .row > div.small { flex: 0 0 100px; }
+        .field input:focus,
+        .field select:focus { outline: none; border-color: #3b82f6; }
+
+        .row2 { display: flex; gap: .5rem; }
+        .row2 .field { flex: 1; }
+        .row2 .field.small { flex: 0 0 80px; }
+
         .checkbox-row {
             display: flex;
             align-items: center;
             gap: .5rem;
-            margin-bottom: .75rem;
+            font-size: .85rem;
+            color: #e2e8f0;
         }
-        .checkbox-row input { margin: 0; }
-        .checkbox-row label { margin: 0; color: #e2e8f0; }
-        .file-input {
+
+        .file-pill {
             position: relative;
-            border: 2px dashed #334155;
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
+            border: 1px dashed #334155;
+            border-radius: 6px;
+            padding: .65rem .75rem;
             cursor: pointer;
-            margin-bottom: 1.25rem;
-            transition: border-color .2s;
-        }
-        .file-input:hover { border-color: #3b82f6; }
-        .file-input input {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .file-input .label {
+            font-size: .82rem;
             color: #94a3b8;
-            font-size: .875rem;
+            transition: border-color .15s;
+            text-align: center;
         }
-        .file-input .label strong { color: #3b82f6; }
-        .file-name {
-            margin-top: .5rem;
-            font-size: .8rem;
-            color: #3b82f6;
+        .file-pill:hover { border-color: #3b82f6; color: #3b82f6; }
+        .file-pill input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+        .file-pill .fname { color: #3b82f6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #334155;
+            margin: .25rem 0;
+            flex-shrink: 0;
         }
-        .btn-group { display: flex; gap: .75rem; margin-top: 0; }
+
+        .btn-stack { display: flex; flex-direction: column; gap: .6rem; }
         button {
             width: 100%;
-            padding: .75rem;
-            background: #3b82f6;
-            color: #fff;
+            padding: .55rem;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 6px;
+            font-size: .875rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background .2s;
+            transition: background .15s;
         }
-        button:hover { background: #2563eb; }
-        button.btn-analyze {
-            background: #7c3aed;
+        .btn-send    { background: #3b82f6; color: #fff; }
+        .btn-send:hover { background: #2563eb; }
+        .btn-analyze { background: #7c3aed; color: #fff; }
+        .btn-analyze:hover { background: #6d28d9; }
+
+        /* ── Center: Preview ── */
+        .col-preview {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #0f172a;
         }
-        button.btn-analyze:hover { background: #6d28d9; }
-        /* Analysis panel */
-        #analysis-panel {
-            display: none;
-            margin-top: 1.5rem;
-            border-top: 1px solid #334155;
-            padding-top: 1.25rem;
+        .col-preview-header {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: .4rem 1rem;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #64748b;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        #analysis-panel h2 {
-            font-size: 1rem;
-            color: #f8fafc;
-            margin-bottom: 1rem;
+        .preview-toggle {
+            display: flex;
+            gap: .35rem;
+        }
+        .preview-toggle button {
+            width: auto;
+            padding: .2rem .6rem;
+            font-size: .7rem;
+            font-weight: 600;
+            border-radius: 4px;
+            border: 1px solid #334155;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .preview-toggle button.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+        .preview-stage {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1rem;
+            background: #cbd5e1;
+        }
+        .preview-stage.is-desktop { align-items: stretch; padding: 0; }
+        #preview-frame {
+            border: none;
+            display: block;
+            background: #fff;
+            transition: width .3s;
+        }
+        #preview-frame.mobile {
+            width: 375px;
+            min-height: 600px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.3);
+            border-radius: 8px;
+        }
+        #preview-frame.desktop {
+            width: 100%;
+            height: 100%;
+        }
+        .preview-placeholder {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: .875rem;
+            background: #0f172a;
+            text-align: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        /* ── Right: Analysis ── */
+        .col-analysis {
+            width: 300px;
+            flex-shrink: 0;
+            background: #1e293b;
+            border-left: 1px solid #334155;
+            overflow-y: auto;
+            padding: 1.25rem;
+        }
+        .col-analysis-header {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #64748b;
+            margin-bottom: .75rem;
         }
         .score-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: .75rem;
-            margin-bottom: 1.25rem;
+            grid-template-columns: 1fr 1fr;
+            gap: .4rem;
+            margin-bottom: 1rem;
         }
         .score-card {
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 8px;
-            padding: .75rem;
+            padding: .6rem .4rem;
             text-align: center;
         }
-        .score-card .client-name { font-size: .75rem; color: #94a3b8; margin-bottom: .35rem; }
-        .score-card .score-value { font-size: 1.6rem; font-weight: 700; }
-        .score-card .score-value.high  { color: #34d399; }
-        .score-card .score-value.mid   { color: #fbbf24; }
-        .score-card .score-value.low   { color: #f87171; }
+        .score-card .icon { font-size: .9rem; }
+        .score-card .cname { font-size: .65rem; color: #64748b; margin: .15rem 0; line-height: 1.2; }
+        .score-card .val { font-size: 1.5rem; font-weight: 700; }
+        .val.high  { color: #34d399; }
+        .val.mid   { color: #fbbf24; }
+        .val.low   { color: #f87171; }
+
+        .issues-title {
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #64748b;
+            margin-bottom: .5rem;
+        }
         .issues-list { list-style: none; }
         .issues-list li {
             display: flex;
-            gap: .6rem;
+            gap: .45rem;
             align-items: flex-start;
-            padding: .5rem 0;
-            border-bottom: 1px solid #1e293b;
-            font-size: .82rem;
+            padding: .45rem 0;
+            border-bottom: 1px solid #0f172a;
+            font-size: .76rem;
             color: #cbd5e1;
+            line-height: 1.4;
         }
         .badge {
             flex-shrink: 0;
-            font-size: .7rem;
+            font-size: .62rem;
             font-weight: 700;
-            padding: .15rem .4rem;
-            border-radius: 4px;
+            padding: .12rem .3rem;
+            border-radius: 3px;
             text-transform: uppercase;
+            margin-top: .1rem;
         }
         .badge.error   { background: #7f1d1d; color: #fca5a5; }
         .badge.warning { background: #78350f; color: #fcd34d; }
         .badge.info    { background: #1e3a5f; color: #93c5fd; }
-        .client-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .25rem; }
+        .client-tags { display: flex; flex-wrap: wrap; gap: .2rem; margin-top: .3rem; }
         .client-tag {
-            font-size: .65rem;
+            font-size: .6rem;
             background: #334155;
             color: #94a3b8;
-            padding: .1rem .35rem;
+            padding: .08rem .28rem;
             border-radius: 3px;
         }
-        #analysis-loading { color: #94a3b8; font-size: .875rem; text-align: center; padding: 1rem 0; }
-        #analysis-error   { color: #fca5a5; font-size: .875rem; margin-top: .5rem; }
-        select {
-            width: 100%;
-            padding: .55rem .75rem;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            background: #0f172a;
-            color: #e2e8f0;
-            font-size: .9rem;
-            margin-bottom: .75rem;
-            cursor: pointer;
-            transition: border-color .2s;
+        .analysis-empty {
+            color: #475569;
+            font-size: .82rem;
+            text-align: center;
+            padding: 2rem 0;
         }
-        select:focus { outline: none; border-color: #3b82f6; }
+        #analysis-loading { color: #94a3b8; font-size: .82rem; padding: .5rem 0; }
+        #analysis-error   { color: #fca5a5; font-size: .82rem; margin-bottom: .5rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Email Simple Sender</h1>
-        <p class="subtitle">Envie e-mails HTML para teste de forma rápida.</p>
 
+    <!-- Top bar -->
+    <div class="topbar">
+        <h1>Email Simple Sender</h1>
+        <span class="subtitle">Envio e análise de e-mails HTML</span>
+    </div>
+
+    <!-- Flash messages -->
+    <div class="flash-area">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
         <div class="flash {{ category }}">{{ message }}</div>
         {% endfor %}
         {% endwith %}
+    </div>
 
-        <form method="POST" enctype="multipart/form-data">
+    <!-- 3 columns -->
+    <div class="workspace">
 
-            <fieldset>
-                <legend>Servidor SMTP</legend>
-                <label for="smtp_profile">Perfil</label>
-                <select id="smtp_profile">
-                    <option value="">— Configuração manual —</option>
-                    <option value="gmail">Gmail</option>
-                    <option value="outlook">Outlook / Hotmail</option>
-                    <option value="yahoo">Yahoo Mail</option>
-                    <option value="mailhog">Mailhog (local)</option>
-                    <option value="mailtrap">Mailtrap</option>
-                </select>
-                <div class="row">
-                    <div>
-                        <label for="smtp_host">Host *</label>
+        <!-- ── Col 1: Form ── -->
+        <div class="col-form">
+            <form method="POST" enctype="multipart/form-data" id="main-form">
+
+                <div class="field">
+                    <label>Perfil SMTP</label>
+                    <select id="smtp_profile">
+                        <option value="">Manual</option>
+                        <option value="gmail">Gmail</option>
+                        <option value="outlook">Outlook / Office 365</option>
+                        <option value="yahoo">Yahoo Mail</option>
+                        <option value="mailhog">Mailhog (local)</option>
+                        <option value="mailtrap">Mailtrap</option>
+                    </select>
+                </div>
+
+                <div class="row2">
+                    <div class="field">
+                        <label>Host SMTP *</label>
                         <input type="text" id="smtp_host" name="smtp_host" placeholder="smtp.gmail.com" required>
                     </div>
-                    <div class="small">
-                        <label for="smtp_port">Porta</label>
+                    <div class="field small">
+                        <label>Porta</label>
                         <input type="number" id="smtp_port" name="smtp_port" value="587">
                     </div>
                 </div>
-                <label for="smtp_user">Usuário</label>
-                <input type="text" id="smtp_user" name="smtp_user" placeholder="seu@email.com">
-                <label for="smtp_pass">Senha</label>
-                <input type="password" id="smtp_pass" name="smtp_pass" placeholder="senha ou app password">
+
+                <div class="field">
+                    <label>Usuário</label>
+                    <input type="text" id="smtp_user" name="smtp_user" placeholder="seu@email.com">
+                </div>
+
+                <div class="field">
+                    <label>Senha</label>
+                    <input type="password" id="smtp_pass" name="smtp_pass" placeholder="senha / app password">
+                </div>
+
                 <div class="checkbox-row">
                     <input type="checkbox" id="use_tls" name="use_tls" checked>
                     <label for="use_tls">Usar TLS</label>
                 </div>
-            </fieldset>
 
-            <fieldset>
-                <legend>E-mail</legend>
-                <label for="from_email">Remetente *</label>
-                <input type="email" id="from_email" name="from_email" placeholder="remetente@email.com" required>
-                <label for="to_email">Destinatário *</label>
-                <input type="email" id="to_email" name="to_email" placeholder="destinatario@email.com" required>
-                <label for="subject">Assunto</label>
-                <input type="text" id="subject" name="subject" placeholder="Teste de e-mail HTML" value="Teste de e-mail HTML">
-            </fieldset>
+                <hr class="divider">
 
-            <div class="file-input" id="dropzone">
-                <input type="file" name="zip_file" accept=".zip" required id="zip_input">
-                <div class="label"><strong>Clique</strong> ou arraste o arquivo .zip aqui</div>
-                <div class="file-name" id="file-name"></div>
+                <div class="field">
+                    <label>Remetente *</label>
+                    <input type="email" id="from_email" name="from_email" placeholder="remetente@email.com" required>
+                </div>
+
+                <div class="field">
+                    <label>Destinatário *</label>
+                    <input type="email" id="to_email" name="to_email" placeholder="destinatario@email.com" required>
+                </div>
+
+                <div class="field">
+                    <label>Assunto</label>
+                    <input type="text" id="subject" name="subject" value="Teste de e-mail HTML">
+                </div>
+
+                <hr class="divider">
+
+                <div class="field" style="margin-bottom: 1rem;">
+                    <label>Arquivo ZIP *</label>
+                    <div class="file-pill">
+                        <input type="file" name="zip_file" accept=".zip" id="zip_input">
+                        <span id="file-name">Clique para selecionar .zip</span>
+                    </div>
+                </div>
+
+                <div class="btn-stack">
+                    <button type="button" class="btn-analyze" id="btn-analyze">⚡ Analisar HTML</button>
+                    <button type="submit" class="btn-send">✉ Enviar E-mail</button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- ── Col 2: Preview ── -->
+        <div class="col-preview" id="col-preview">
+            <div class="col-preview-header">
+                <span>Preview</span>
+                <div class="preview-toggle">
+                    <button id="btn-desktop" class="active" onclick="setViewport('desktop')">🖥 Desktop</button>
+                    <button id="btn-mobile" onclick="setViewport('mobile')">📱 Mobile</button>
+                </div>
             </div>
-
-            <div class="btn-group">
-                <button type="submit">Enviar E-mail</button>
-                <button type="button" class="btn-analyze" id="btn-analyze">Analisar HTML</button>
+            <div class="preview-placeholder" id="preview-placeholder">
+                Selecione um ZIP e clique em <strong style="color:#7c3aed">Analisar HTML</strong> para ver o preview
             </div>
-        </form>
+            <div class="preview-stage is-desktop" id="preview-stage" style="display:none">
+                <iframe id="preview-frame" class="desktop"></iframe>
+            </div>
+        </div>
 
-        <div id="analysis-panel">
-            <h2>Análise de Compatibilidade</h2>
+        <!-- ── Col 3: Analysis ── -->
+        <div class="col-analysis">
+            <div class="col-analysis-header">Análise de Compatibilidade</div>
             <div id="analysis-loading" style="display:none">Analisando...</div>
             <div id="analysis-error"></div>
-            <div class="score-grid" id="score-grid"></div>
+            <div id="analysis-empty" class="analysis-empty">
+                Clique em <strong style="color:#7c3aed">Analisar HTML</strong> para ver a nota por mail client.
+            </div>
+            <div class="score-grid" id="score-grid" style="display:none"></div>
+            <div class="issues-title" id="issues-title" style="display:none">Problemas encontrados</div>
             <ul class="issues-list" id="issues-list"></ul>
         </div>
+
     </div>
 
     <script>
-        const input = document.getElementById('zip_input');
-        const nameEl = document.getElementById('file-name');
-        input.addEventListener('change', () => {
-            nameEl.textContent = input.files[0] ? input.files[0].name : '';
+        // File picker
+        const zipInput  = document.getElementById('zip_input');
+        const fileNameEl = document.getElementById('file-name');
+        zipInput.addEventListener('change', () => {
+            fileNameEl.textContent = zipInput.files[0] ? zipInput.files[0].name : 'Clique para selecionar .zip';
         });
 
+        // SMTP profiles
         const profiles = {
-            gmail:   { host: 'smtp.gmail.com',        port: 587,  tls: true  },
-            outlook: { host: 'smtp.office365.com',    port: 587,  tls: true  },
-            yahoo:   { host: 'smtp.mail.yahoo.com',   port: 587,  tls: true  },
-            mailhog:  { host: 'localhost',              port: 1025, tls: false },
-            mailtrap: { host: 'sandbox.smtp.mailtrap.io', port: 587, tls: true  },
+            gmail:    { host: 'smtp.gmail.com',           port: 587,  tls: true  },
+            outlook:  { host: 'smtp.office365.com',       port: 587,  tls: true  },
+            yahoo:    { host: 'smtp.mail.yahoo.com',      port: 587,  tls: true  },
+            mailhog:  { host: 'localhost',                 port: 1025, tls: false },
+            mailtrap: { host: 'sandbox.smtp.mailtrap.io', port: 587,  tls: true  },
         };
-
         document.getElementById('smtp_profile').addEventListener('change', function () {
             const p = profiles[this.value];
             if (!p) return;
@@ -312,28 +446,137 @@
             document.getElementById('use_tls').checked  = p.tls;
         });
 
+        // Viewport toggle
+        function setViewport(mode) {
+            const frame = document.getElementById('preview-frame');
+            const stage = document.getElementById('preview-stage');
+            document.getElementById('btn-desktop').classList.toggle('active', mode === 'desktop');
+            document.getElementById('btn-mobile').classList.toggle('active', mode === 'mobile');
+            if (mode === 'mobile') {
+                frame.classList.remove('desktop');
+                frame.classList.add('mobile');
+                stage.classList.remove('is-desktop');
+                frame.style.height = Math.max(frame.contentDocument?.body?.scrollHeight || 600, 600) + 'px';
+            } else {
+                frame.classList.remove('mobile');
+                frame.classList.add('desktop');
+                stage.classList.add('is-desktop');
+                frame.style.height = '';
+            }
+        }
+
+        // Lazy-load JSZip
+        let _jszip = null;
+        function loadJSZip() {
+            if (_jszip) return Promise.resolve(_jszip);
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+                s.onload = () => { _jszip = window.JSZip; resolve(_jszip); };
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        // Analyze
         document.getElementById('btn-analyze').addEventListener('click', async function () {
-            const zipInput = document.getElementById('zip_input');
             if (!zipInput.files.length) {
                 alert('Selecione um arquivo .zip primeiro.');
                 return;
             }
 
-            const panel   = document.getElementById('analysis-panel');
-            const loading = document.getElementById('analysis-loading');
-            const errEl   = document.getElementById('analysis-error');
-            const grid    = document.getElementById('score-grid');
-            const list    = document.getElementById('issues-list');
+            const loading     = document.getElementById('analysis-loading');
+            const errEl       = document.getElementById('analysis-error');
+            const grid        = document.getElementById('score-grid');
+            const list        = document.getElementById('issues-list');
+            const issuesTitle = document.getElementById('issues-title');
+            const emptyEl     = document.getElementById('analysis-empty');
+            const frame       = document.getElementById('preview-frame');
+            const stage       = document.getElementById('preview-stage');
+            const placeholder = document.getElementById('preview-placeholder');
 
-            panel.style.display = 'block';
             loading.style.display = 'block';
+            emptyEl.style.display = 'none';
             errEl.textContent = '';
+            grid.style.display = 'none';
             grid.innerHTML = '';
             list.innerHTML = '';
+            issuesTitle.style.display = 'none';
+            stage.style.display = 'none';
+            placeholder.style.display = 'flex';
 
+            const file = zipInput.files[0];
+
+            // ── Preview (client-side via JSZip) ──
+            try {
+                const JSZip = await loadJSZip();
+                const zip   = await JSZip.loadAsync(file);
+                const blobs = {};
+
+                // Index blobs by full path, relative-to-root path, and basename
+                const blobsByFull = {};
+                const blobsByRel  = {};  // path after first folder
+                const blobsByName = {};  // just filename
+
+                for (const [name, entry] of Object.entries(zip.files)) {
+                    if (entry.dir || name.includes('__MACOSX')) continue;
+                    const data = await entry.async('blob');
+                    const url  = URL.createObjectURL(data);
+                    blobsByFull[name] = url;
+                    const afterFirst = name.includes('/') ? name.substring(name.indexOf('/') + 1) : name;
+                    blobsByRel[afterFirst] = url;
+                    blobsByName[name.split('/').pop()] = url;
+                }
+
+                let htmlEntry = null;
+                for (const name of Object.keys(zip.files)) {
+                    if (name.includes('__MACOSX')) continue;
+                    if (name.toLowerCase().endsWith('.html')) {
+                        if (!htmlEntry || name.toLowerCase().endsWith('index.html')) htmlEntry = name;
+                    }
+                }
+
+                if (htmlEntry) {
+                    let html = await zip.files[htmlEntry].async('string');
+                    const basePath = htmlEntry.includes('/') ? htmlEntry.substring(0, htmlEntry.lastIndexOf('/') + 1) : '';
+
+                    function resolveBlob(src) {
+                        const dec = decodeURIComponent(src);
+                        return blobsByFull[basePath + dec]
+                            || blobsByFull[basePath + src]
+                            || blobsByRel[dec]
+                            || blobsByRel[src]
+                            || blobsByFull[dec]
+                            || blobsByFull[src]
+                            || blobsByName[dec.split('/').pop()]
+                            || blobsByName[src.split('/').pop()]
+                            || null;
+                    }
+
+                    // Replace src/href
+                    html = html.replace(/(src|href)=["'](?!https?:\/\/|cid:|data:|#|mailto:)([^"']+)["']/gi, (match, attr, src) => {
+                        const url = resolveBlob(src);
+                        return url ? `${attr}="${url}"` : match;
+                    });
+
+                    // Replace CSS url()
+                    html = html.replace(/url\(['"]?(?!https?:\/\/|data:)([^'")]+)['"]?\)/gi, (match, src) => {
+                        const url = resolveBlob(src);
+                        return url ? `url("${url}")` : match;
+                    });
+
+                    const blob = new Blob([html], { type: 'text/html' });
+                    frame.src = URL.createObjectURL(blob);
+                    stage.style.display = 'flex';
+                    placeholder.style.display = 'none';
+                }
+            } catch (e) {
+                console.warn('Preview error:', e);
+            }
+
+            // ── Server-side analysis ──
             const fd = new FormData();
-            fd.append('zip_file', zipInput.files[0]);
-
+            fd.append('zip_file', file);
             try {
                 const res  = await fetch('/analyze', { method: 'POST', body: fd });
                 const data = await res.json();
@@ -342,12 +585,14 @@
                 if (data.error) { errEl.textContent = data.error; return; }
 
                 // Scores
+                grid.style.display = 'grid';
                 Object.values(data.scores).forEach(c => {
                     const cls = c.score >= 80 ? 'high' : c.score >= 50 ? 'mid' : 'low';
                     grid.innerHTML += `
                         <div class="score-card">
-                            <div class="client-name">${c.icon} ${c.name}</div>
-                            <div class="score-value ${cls}">${c.score}</div>
+                            <div class="icon">${c.icon}</div>
+                            <div class="cname">${c.name}</div>
+                            <div class="val ${cls}">${c.score}</div>
                         </div>`;
                 });
 
@@ -355,13 +600,12 @@
                 const clientNames = {};
                 Object.entries(data.scores).forEach(([id, c]) => clientNames[id] = c.name);
 
+                issuesTitle.style.display = 'block';
                 if (!data.issues.length) {
-                    list.innerHTML = '<li style="color:#34d399">Nenhum problema encontrado!</li>';
+                    list.innerHTML = '<li style="color:#34d399;border:none;padding:.75rem 0">Nenhum problema encontrado!</li>';
                 } else {
-                    data.issues.sort((a,b) => {
-                        const order = {error:0, warning:1, info:2};
-                        return order[a.severity] - order[b.severity];
-                    }).forEach(issue => {
+                    const order = { error: 0, warning: 1, info: 2 };
+                    data.issues.sort((a, b) => order[a.severity] - order[b.severity]).forEach(issue => {
                         const tags = issue.clients.map(id =>
                             `<span class="client-tag">${clientNames[id] || id}</span>`).join('');
                         list.innerHTML += `
