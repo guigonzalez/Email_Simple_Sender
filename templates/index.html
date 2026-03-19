@@ -120,6 +120,7 @@
             font-size: .8rem;
             color: #3b82f6;
         }
+        .btn-group { display: flex; gap: .75rem; margin-top: 0; }
         button {
             width: 100%;
             padding: .75rem;
@@ -133,6 +134,71 @@
             transition: background .2s;
         }
         button:hover { background: #2563eb; }
+        button.btn-analyze {
+            background: #7c3aed;
+        }
+        button.btn-analyze:hover { background: #6d28d9; }
+        /* Analysis panel */
+        #analysis-panel {
+            display: none;
+            margin-top: 1.5rem;
+            border-top: 1px solid #334155;
+            padding-top: 1.25rem;
+        }
+        #analysis-panel h2 {
+            font-size: 1rem;
+            color: #f8fafc;
+            margin-bottom: 1rem;
+        }
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: .75rem;
+            margin-bottom: 1.25rem;
+        }
+        .score-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: .75rem;
+            text-align: center;
+        }
+        .score-card .client-name { font-size: .75rem; color: #94a3b8; margin-bottom: .35rem; }
+        .score-card .score-value { font-size: 1.6rem; font-weight: 700; }
+        .score-card .score-value.high  { color: #34d399; }
+        .score-card .score-value.mid   { color: #fbbf24; }
+        .score-card .score-value.low   { color: #f87171; }
+        .issues-list { list-style: none; }
+        .issues-list li {
+            display: flex;
+            gap: .6rem;
+            align-items: flex-start;
+            padding: .5rem 0;
+            border-bottom: 1px solid #1e293b;
+            font-size: .82rem;
+            color: #cbd5e1;
+        }
+        .badge {
+            flex-shrink: 0;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: .15rem .4rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .badge.error   { background: #7f1d1d; color: #fca5a5; }
+        .badge.warning { background: #78350f; color: #fcd34d; }
+        .badge.info    { background: #1e3a5f; color: #93c5fd; }
+        .client-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .25rem; }
+        .client-tag {
+            font-size: .65rem;
+            background: #334155;
+            color: #94a3b8;
+            padding: .1rem .35rem;
+            border-radius: 3px;
+        }
+        #analysis-loading { color: #94a3b8; font-size: .875rem; text-align: center; padding: 1rem 0; }
+        #analysis-error   { color: #fca5a5; font-size: .875rem; margin-top: .5rem; }
         select {
             width: 100%;
             padding: .55rem .75rem;
@@ -208,8 +274,19 @@
                 <div class="file-name" id="file-name"></div>
             </div>
 
-            <button type="submit">Enviar E-mail</button>
+            <div class="btn-group">
+                <button type="submit">Enviar E-mail</button>
+                <button type="button" class="btn-analyze" id="btn-analyze">Analisar HTML</button>
+            </div>
         </form>
+
+        <div id="analysis-panel">
+            <h2>Análise de Compatibilidade</h2>
+            <div id="analysis-loading" style="display:none">Analisando...</div>
+            <div id="analysis-error"></div>
+            <div class="score-grid" id="score-grid"></div>
+            <ul class="issues-list" id="issues-list"></ul>
+        </div>
     </div>
 
     <script>
@@ -233,6 +310,74 @@
             document.getElementById('smtp_host').value = p.host;
             document.getElementById('smtp_port').value = p.port;
             document.getElementById('use_tls').checked  = p.tls;
+        });
+
+        document.getElementById('btn-analyze').addEventListener('click', async function () {
+            const zipInput = document.getElementById('zip_input');
+            if (!zipInput.files.length) {
+                alert('Selecione um arquivo .zip primeiro.');
+                return;
+            }
+
+            const panel   = document.getElementById('analysis-panel');
+            const loading = document.getElementById('analysis-loading');
+            const errEl   = document.getElementById('analysis-error');
+            const grid    = document.getElementById('score-grid');
+            const list    = document.getElementById('issues-list');
+
+            panel.style.display = 'block';
+            loading.style.display = 'block';
+            errEl.textContent = '';
+            grid.innerHTML = '';
+            list.innerHTML = '';
+
+            const fd = new FormData();
+            fd.append('zip_file', zipInput.files[0]);
+
+            try {
+                const res  = await fetch('/analyze', { method: 'POST', body: fd });
+                const data = await res.json();
+                loading.style.display = 'none';
+
+                if (data.error) { errEl.textContent = data.error; return; }
+
+                // Scores
+                Object.values(data.scores).forEach(c => {
+                    const cls = c.score >= 80 ? 'high' : c.score >= 50 ? 'mid' : 'low';
+                    grid.innerHTML += `
+                        <div class="score-card">
+                            <div class="client-name">${c.icon} ${c.name}</div>
+                            <div class="score-value ${cls}">${c.score}</div>
+                        </div>`;
+                });
+
+                // Issues
+                const clientNames = {};
+                Object.entries(data.scores).forEach(([id, c]) => clientNames[id] = c.name);
+
+                if (!data.issues.length) {
+                    list.innerHTML = '<li style="color:#34d399">Nenhum problema encontrado!</li>';
+                } else {
+                    data.issues.sort((a,b) => {
+                        const order = {error:0, warning:1, info:2};
+                        return order[a.severity] - order[b.severity];
+                    }).forEach(issue => {
+                        const tags = issue.clients.map(id =>
+                            `<span class="client-tag">${clientNames[id] || id}</span>`).join('');
+                        list.innerHTML += `
+                            <li>
+                                <span class="badge ${issue.severity}">${issue.severity}</span>
+                                <div>
+                                    ${issue.message}
+                                    <div class="client-tags">${tags}</div>
+                                </div>
+                            </li>`;
+                    });
+                }
+            } catch (e) {
+                loading.style.display = 'none';
+                errEl.textContent = 'Erro na análise: ' + e.message;
+            }
         });
     </script>
 </body>
