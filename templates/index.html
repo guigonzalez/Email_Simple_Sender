@@ -423,6 +423,40 @@
     </div>
 
     <script>
+        // ── Persist form fields ──
+        const PERSIST_FIELDS = ['smtp_host', 'smtp_port', 'smtp_user', 'from_email', 'to_email', 'subject', 'use_tls'];
+
+        function saveForm() {
+            const data = {};
+            PERSIST_FIELDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                data[id] = el.type === 'checkbox' ? el.checked : el.value;
+            });
+            localStorage.setItem('ess_form', JSON.stringify(data));
+        }
+
+        function restoreForm() {
+            try {
+                const data = JSON.parse(localStorage.getItem('ess_form') || '{}');
+                PERSIST_FIELDS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el || data[id] === undefined) return;
+                    if (el.type === 'checkbox') el.checked = data[id];
+                    else el.value = data[id];
+                });
+            } catch (e) {}
+        }
+
+        restoreForm();
+
+        // Save on form submit and on input change
+        document.getElementById('main-form').addEventListener('submit', saveForm);
+        PERSIST_FIELDS.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', saveForm);
+        });
+
         // File picker
         const zipInput  = document.getElementById('zip_input');
         const fileNameEl = document.getElementById('file-name');
