@@ -43,9 +43,10 @@ def find_html_file(base_dir):
         if os.path.isfile(path):
             return path
 
-    for root, _, files in os.walk(base_dir):
+    for root, dirs, files in os.walk(base_dir):
+        dirs[:] = [d for d in dirs if d != "__MACOSX" and not d.startswith(".")]
         for f in files:
-            if f.lower().endswith(".html"):
+            if f.lower().endswith(".html") and not f.startswith("._"):
                 return os.path.join(root, f)
     return None
 
